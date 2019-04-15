@@ -2,25 +2,26 @@ import React, { Component } from 'react';
 import {
   Card,
   CardImg,
-  CardText,
+//   CardText,
   CardBody,
   CardTitle,
   CardSubtitle,
 } from 'reactstrap';
 // import {FaStar} from 'react-icons/fa';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+
 import { connect } from "react-redux";
 
-class FilmDetailed extends Component {
+class ActorDetailed extends Component {
   
   render() {
     // console.log(this.props,'props-film-1')
     return (
-      <div className="Films container-fluid">
+      <div className="container-fluid">
       <div className="row">
          <Pagination aria-label="Page navigation example" style={{marginLeft:'25px',marginTop:'10px'}}>
             <PaginationItem >
-                <PaginationLink  previous onClick={()=>this.props.history.push('/films')}>
+                <PaginationLink  previous onClick={()=>this.props.history.push('/actors')}>
              Back 
              </PaginationLink>
             </PaginationItem>         
@@ -28,20 +29,21 @@ class FilmDetailed extends Component {
         </div>
         <div className="row">
         <div className="col-md-2"></div>
-        {this.props.film.map((item, i) => (
+        {this.props.actor.map((item, i) => (
           <div key={i} className="col-md-8" style={{marginTop:'10px'}}>
           <Card key={i} style={{minHeight:'100%',display:'flex',flexDirection:'flex-start'}}>
           <div style={{display:'flex',flexDirection:'flex-start'}}>
-            <CardImg  width="100%" src={`https://image.tmdb.org/t/p/w300${item.poster_path}`} alt={item.title} />
+          <CardImg top width="100%" src={`https://image.tmdb.org/t/p/w500${item.profile_path}`} alt={item.name} />
+
             <CardBody>
               <CardTitle
                style={{color:'darkblue',fontSize:'20px',fontWeight:'bold',cursor:'pointer'}}
-              >{item.title}</CardTitle>
+              >{item.name}</CardTitle>
 
               <CardSubtitle className="d-flex justify-content-between">
               </CardSubtitle>
 
-              <CardText>{item.overview}</CardText>
+              {/* <CardText>{item.overview}</CardText> */}
             </CardBody>
             </div>
           </Card>
@@ -59,16 +61,19 @@ class FilmDetailed extends Component {
 
 const mapStateToProps = state => {
     return {
-        film: state.filmDetailedReducer.film
+        page: state.paginationReducer.page,
+        actor: state.actorDetailedReducer.actor
     };
   };
   
   const mapDispatchToProps = dispatch => {
     return {
-
-    updateFilmDetailed: film => {
-      dispatch({ type: "UPDATE_FILM_DETAILED", payload: film });
+    updateCurrentPage: page => {
+        dispatch({ type: "UPDATE_PAGE", payload: page });
+    },
+    updateActorDetailed: actor => {
+      dispatch({ type: "UPDATE_ACTOR_DETAILED", payload: actor });
   }
     };
   };
-export default connect(mapStateToProps,mapDispatchToProps)(FilmDetailed);
+export default connect(mapStateToProps,mapDispatchToProps)(ActorDetailed);

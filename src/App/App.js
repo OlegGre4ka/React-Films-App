@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import './App.scss';
 import NavbarMenu from './Header/NavbarMenu';
 import Films from './Main/Films';
-import FilmDetailed from './Main/FilmDetailed'
+import FilmDetailed from './Main/FilmDetailed';
 import Actors from './Main/Actors';
+import ActorDetailed from './Main/ActorDetailed';
+
 import PagePagination from "./Main/PagePagination";
 import {
   Route,
@@ -30,11 +32,17 @@ class App extends Component {
               component={FilmDetailed}
             />
             <Route path="/films" exact render={() => <Films />} />
+            <Route
+              path="/actors/:id"
+              component={ActorDetailed}
+            />
             <Route path="/actors" render={() => <Actors />} />
         
           </Switch>
           <div className="d-flex justify-content-center">
-        { this.props.location.pathname==='/films'&& <PagePagination/>}
+        { (this.props.location.pathname==='/films' || this.props.location.pathname==='/actors')&& <PagePagination/>}
+        {/* { this.props.location.pathname==='/actors'&& <PagePagination/>} */}
+
           </div>
         </main>
         <footer className="App-footer">

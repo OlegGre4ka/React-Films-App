@@ -24,11 +24,12 @@ class App extends Component {
     // console.log(this.props, "App-props"); 
     this.props.history.replace('/films');
   }
-  messageActors= value =>{
-    console.log(value,'value-message')
+
+  settingPagination = value =>{
 this.setState({setPagination:value})
   }
-  render() {
+
+  render(){
     return (
       <div className="App">
         <header className="App-header">
@@ -40,17 +41,16 @@ this.setState({setPagination:value})
               path="/films/:id"
               component={FilmDetailed}
             />
-            <Route path="/films" exact render={() => <Films />} />
+            <Route path="/films" exact render={() => <Films settingPagination={this.settingPagination}/>} />
             <Route
               path="/actors/:id"
               component={ActorDetailed}
             />
-            <Route path="/actors" render={() => <Actors messageActors={this.messageActors}/>} />
+            <Route path="/actors" render={() => <Actors settingPagination={this.settingPagination}/>} />
         
           </Switch>
           <div className="d-flex justify-content-center">
-        { (this.props.location.pathname==='/films' || this.props.location.pathname==='/actors')&& <PagePagination/>}
-        {/* {this.state.setPagination && <PagePagination/>} */}
+        { (this.props.location.pathname==='/films' || this.props.location.pathname==='/actors')&& this.state.setPagination &&<PagePagination/>}
           </div>
         </main>
         <footer className="App-footer">

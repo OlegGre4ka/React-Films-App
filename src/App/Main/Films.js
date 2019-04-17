@@ -8,6 +8,7 @@ import {
 } from 'reactstrap';
 import { Spinner } from 'reactstrap';
 import { FaStar } from 'react-icons/fa';
+import MessageNotFound from './MessageNotFound';
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
@@ -19,11 +20,14 @@ class Films extends Component {
     this.state = {
       films: [],
       genres: [],
+      message: false,
       spinner: true
     };
   }
 
   componentDidMount() {
+    this.props.settingPagination(false);
+
     this.props.updateCurrentPage(1);
     this.gettingListFilms();
 
@@ -46,6 +50,16 @@ class Films extends Component {
         this.setState({
           films: this.props.searchedFilmData
         });
+        if (this.props.searchedFilmData.length === 0) {
+          this.props.settingPagination(false);
+          this.setState({ message: true });
+          setTimeout(
+            () => {
+              this.setState({ message: false, spinner: true });
+              this.gettingListFilms();
+            }, 1500
+          )
+        }
       }
 
   }
@@ -59,6 +73,7 @@ class Films extends Component {
       films: data.results,
       spinner: false
     });
+    this.props.settingPagination(true);
   }
 
   moveOnFilmDetailed = (id) => {
@@ -73,12 +88,9 @@ class Films extends Component {
         <div className="row">
           <div className="col-md-4"></div>
           <div className="col-md-4 d-flex justify-content-center">
-            {this.state.spinner && <Spinner color="success" style={{ width: '5rem', height: '5rem' }} />}
+            {this.state.spinner && <Spinner color="success" style={{ width: '5rem', height: '5rem', marginTop: '8rem' }} />}
+            {this.state.message && <MessageNotFound />}
           </div>
-
-          {/* {this.state.message &&  <p 
-        className="col-md-4"
-        style={{color:'red',textAlign:'center', fontSize:'16px', fontWeight:'bold'}}>Results by your search - not found</p>} */}
           <div className="col-md-4"></div>
 
         </div>
@@ -117,9 +129,7 @@ const mapStateToProps = state => {
   return {
     page: state.paginationReducer.page,
     film: state.filmDetailedReducer.film,
-    // searchWord: state.searchFilmReducer.searchWord,
     searchedFilmData: state.searchFilmReducer.searchedFilmData
-
   };
 };
 

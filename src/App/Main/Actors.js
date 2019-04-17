@@ -9,11 +9,10 @@ import {
   CardSubtitle,
 } from 'reactstrap';
 import { Spinner } from 'reactstrap';
-
 import { FaStar } from 'react-icons/fa';
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-
+import MessageNotFound from './MessageNotFound';
 
 const API_KEY = '5874acfd11651a28c55771624f7021f4';
 class Actors extends Component {
@@ -25,11 +24,11 @@ class Actors extends Component {
       message: false,
       spinner: true
     };
-    // this.props.messageActors(this.state.message)
 
   }
 
   componentDidMount() {
+    this.props.settingPagination(false);
     this.props.updateCurrentPage(1);
     this.gettingListActors();
   }
@@ -44,14 +43,14 @@ class Actors extends Component {
           actors: this.props.searchedActors
         });
         if (this.props.searchedActors.length === 0) {
+          this.props.settingPagination(false);
+
           this.setState({ message: true });
-          this.props.messageActors(this.state.message)
           setTimeout(
             () => {
-              this.setState({ message: false });
-              this.props.messageActors(this.state.message)
+              this.setState({ message: false,spinner:true });
               this.gettingListActors();
-            }, 2500
+            },1500
           )
         }
       }
@@ -67,7 +66,7 @@ class Actors extends Component {
       spinner: false,
     
     });
-    this.props.messageActors(true)
+    this.props.settingPagination(true);
 
   }
 
@@ -82,11 +81,9 @@ class Actors extends Component {
       <div className="Films container-fluid">
         <div className="row">
           <div className="col-md-4"></div>
-          <div className="col-md-4 d-flex justify-content-center">
-            {this.state.spinner && <Spinner color="success" style={{ width: '5rem', height: '5rem' }} />}
-            {this.state.message && <p
-              // className="col-md-4"
-              style={{ color: 'red', textAlign: 'center', fontSize: '16px', fontWeight: 'bold' }}>Results by your search - not found</p>}
+          <div className="col-md-4 d-flex justify-content-center ">
+            {this.state.spinner && <Spinner color="success" style={{ width: '5rem', height: '5rem',marginTop:'8rem' }} />}
+            {this.state.message && <MessageNotFound/>}
           </div>
           <div className="col-md-4"></div>
 

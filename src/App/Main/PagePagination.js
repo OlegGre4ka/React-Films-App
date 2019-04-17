@@ -3,81 +3,87 @@ import '../App.scss';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 import { connect } from "react-redux";
 
-class PagePagination extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          films: [],
-          // page:1
-        };
-    }
-    selectPrevPage =() => {
-        this.props.updateCurrentPage(this.props.page-1)
-    }
-    selectNextPage = () => {
+const PagePagination = props => {
 
-        if (this.props.page <= 5) {
-            this.props.updateCurrentPage(6)
+    const selectPrevPage = () => {
+        if (props.page >= 2) {
+            props.updateCurrentPage(props.page - 1)
         } else {
-            this.props.updateCurrentPage(this.props.page + 1)
+            props.updateCurrentPage(1)
         }
     }
-    render() {
-        return (
+    const selectNextPage = () => {
+
+        if (props.page <= 5) {
+            props.updateCurrentPage(6)
+        } else {
+            props.updateCurrentPage(props.page + 1)
+        }
+    }
+    return (
         <div className="PagePagination">
-        <Pagination aria-label="Page navigation example">
-            {/* <PaginationItem>
+            <Pagination aria-label="Page navigation example">
+                {/* <PaginationItem>
                 <PaginationLink first  />
             </PaginationItem> */}
-            <PaginationItem>
-                <PaginationLink previous onClick={this.selectPrevPage}/>
-            </PaginationItem>
-            <PaginationItem>
-                <PaginationLink onClick={()=>this.props.updateCurrentPage(1)}>
-                    1
+                {/* <PaginationItem>
+                <PaginationLink previous onClick={selectPrevPage}/>
+            </PaginationItem> */}
+                <PaginationItem>
+                    <PaginationLink onClick={() => props.updateCurrentPage(1)}>
+                        1
           </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-                <PaginationLink onClick={()=>this.props.updateCurrentPage(2)}>
-                    2
+                </PaginationItem>
+                <PaginationItem>
+                    <PaginationLink onClick={() => props.updateCurrentPage(2)}>
+                        2
           </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-                <PaginationLink onClick={()=>this.props.updateCurrentPage(3)}>
-                    3
+                </PaginationItem>
+                <PaginationItem>
+                    <PaginationLink onClick={() => props.updateCurrentPage(3)}>
+                        3
           </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-                <PaginationLink onClick={()=>this.props.updateCurrentPage(4)}>
-                    4
+                </PaginationItem>
+                <PaginationItem>
+                    <PaginationLink onClick={() => props.updateCurrentPage(4)}>
+                        4
           </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-                <PaginationLink onClick={()=>this.props.updateCurrentPage(5)}>
-                    5
+                </PaginationItem>
+                <PaginationItem>
+                    <PaginationLink onClick={() => props.updateCurrentPage(5)}>
+                        5
           </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-                <PaginationLink next onClick={this.selectNextPage} />
-            </PaginationItem>
-            {/* <PaginationItem>
+                </PaginationItem>
+                <PaginationItem>
+                    <PaginationLink previous onClick={selectPrevPage} />
+                </PaginationItem>
+                <PaginationItem>
+                    <PaginationLink next onClick={selectNextPage} />
+                </PaginationItem>
+           {props.page>5&&<PaginationItem>
+                    <PaginationLink>
+                        {props.page}
+                    </PaginationLink>
+                </PaginationItem>}
+
+                {/* <PaginationItem>
                 <PaginationLink last />
             </PaginationItem> */}
-        </Pagination>
+            </Pagination>
         </div>);
-    }
 }
-    const mapStateToProps = state => {
-        return {
-            page: state.paginationReducer.page
-        };
+
+const mapStateToProps = state => {
+    return {
+        page: state.paginationReducer.page
     };
-  
-    const mapDispatchToProps = dispatch => {
-        return {
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
         updateCurrentPage: page => {
             dispatch({ type: "UPDATE_PAGE", payload: page });
         }
-        };
     };
-export default connect(mapStateToProps,mapDispatchToProps)(PagePagination);
+};
+export default connect(mapStateToProps, mapDispatchToProps)(PagePagination);

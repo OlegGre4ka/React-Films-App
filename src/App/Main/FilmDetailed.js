@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Card,
   CardImg,
@@ -7,13 +7,10 @@ import {
   CardTitle,
   CardSubtitle,
 } from 'reactstrap';
-// import {FaStar} from 'react-icons/fa';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 import { connect } from "react-redux";
 
-class FilmDetailed extends Component {
-
-  render() {
+const  FilmDetailed = props=> {
     // console.log(this.props,'props-film-1')
     return (
       <div className="Films container-fluid">
@@ -28,7 +25,7 @@ class FilmDetailed extends Component {
         </div>
         <div className="row">
           <div className="col-md-2"></div>
-          {this.props.film.map((item, i) => (
+          {props.film.map((item, i) => (
             <div key={i} className="col-md-8" style={{ marginTop: '10px' }}>
               <Card key={i} >
                 <div className="row">
@@ -60,7 +57,6 @@ class FilmDetailed extends Component {
 
       </div>
     );
-  }
 }
 
 const mapStateToProps = state => {

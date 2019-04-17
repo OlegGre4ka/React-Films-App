@@ -6,7 +6,8 @@ import {
   CardTitle,
   CardSubtitle,
 } from 'reactstrap';
-import {FaStar} from 'react-icons/fa';
+import { Spinner } from 'reactstrap';
+import { FaStar } from 'react-icons/fa';
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
@@ -17,27 +18,36 @@ class Films extends Component {
     super(props);
     this.state = {
       films: [],
-      genres:[]
+      genres: [],
+      spinner: true
     };
   }
 
   componentDidMount() {
+    this.props.updateCurrentPage(1);
     this.gettingListFilms();
 
-      fetch(
-        `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-U`
-      ).then(response => response.json())
-        .then(genres => {
-          this.setState({
-            genres: genres.genres
-          });
+    fetch(
+      `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-U`
+    ).then(response => response.json())
+      .then(genres => {
+        this.setState({
+          genres: genres.genres
         });
+      });
   }
 
-    componentDidUpdate(prevProps, prevState) {
-      if(prevProps.page!==this.props.page){
-        this.gettingListFilms();
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.page !== this.props.page) {
+      this.gettingListFilms();
     }
+    else
+      if (prevProps.searchedFilmData !== this.props.searchedFilmData) {
+        this.setState({
+          films: this.props.searchedFilmData
+        });
+      }
+
   }
 
   async gettingListFilms() {
@@ -46,37 +56,55 @@ class Films extends Component {
     );
     const data = await response.json();
     this.setState({
-      films: data.results
+      films: data.results,
+      spinner: false
     });
   }
 
   moveOnFilmDetailed = (id) => {
     const Film = this.state.films.filter(item => item.id === id);
     this.props.updateFilmDetailed(Film)
-    this.props.history.push(`/films/`+id);
+    this.props.history.push(`/films/` + id);
   }
   render() {
     // console.log(this.props,'props-films')
     return (
       <div className="Films container-fluid">
         <div className="row">
-        {this.state.films.map((film, i) => (
-          <div key={i} className="col-md-3" style={{padding:'5px'}}>
-          <Card key={i} style={{minHeight:'100%'}} >
-            <CardImg top width="100%" src={`https://image.tmdb.org/t/p/w500${film.poster_path}`} alt={film.title} />
-            <CardBody>
-              <CardTitle  
-               onClick={()=>this.moveOnFilmDetailed(film.id)} 
-               style={{color:'darkblue',fontSize:'20px',fontWeight:'bold',cursor:'pointer'}}>{film.title}</CardTitle>
+          <div className="col-md-4"></div>
+          <div className="col-md-4 d-flex justify-content-center">
+            {this.state.spinner && <Spinner color="success" style={{ width: '5rem', height: '5rem' }} />}
+          </div>
 
-              <CardSubtitle className="d-flex justify-content-between">
-              <span>{film.release_date.slice(0,4)}</span>
-              <span><FaStar style={{color:'gold'}}/>{film.popularity}</span></CardSubtitle>
-              {this.state.genres.map((genre,i)=> (film.genre_ids.some(id=>genre.id===id)&&<span key={i} style={{fontSize:'14px',marginRight:'3px'}}>{(genre.name+' ')}</span>))}
-            </CardBody>
-          </Card>
-          </div>))
-        }
+          {/* {this.state.message &&  <p 
+        className="col-md-4"
+        style={{color:'red',textAlign:'center', fontSize:'16px', fontWeight:'bold'}}>Results by your search - not found</p>} */}
+          <div className="col-md-4"></div>
+
+        </div>
+
+        <div className="row">
+
+          {this.state.films.map((film, i) => (
+            <div key={i} className="col-md-3" style={{ padding: '5px' }}>
+
+              <Card key={i} style={{ minHeight: '100%' }} >
+                <CardImg top width="100%" style={{ cursor: 'pointer' }}
+                  onClick={() => this.moveOnFilmDetailed(film.id)}
+                  src={`https://image.tmdb.org/t/p/w500${film.poster_path}`} alt={film.title} />
+                <CardBody>
+                  <CardTitle
+                    onClick={() => this.moveOnFilmDetailed(film.id)}
+                    style={{ color: 'darkblue', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer' }}>{film.title}</CardTitle>
+
+                  <CardSubtitle className="d-flex justify-content-between">
+                    <span>{film.release_date.slice(0, 4)}</span>
+                    <span><FaStar style={{ color: 'gold' }} />{film.popularity}</span></CardSubtitle>
+                  {this.state.genres.map((genre, i) => (film.genre_ids.some(id => genre.id === id) && <span key={i} style={{ fontSize: '14px', marginRight: '3px' }}>{(genre.name + ' ')}</span>))}
+                </CardBody>
+              </Card>
+            </div>))
+          }
         </div>
 
 
@@ -87,19 +115,22 @@ class Films extends Component {
 
 const mapStateToProps = state => {
   return {
-      page: state.paginationReducer.page,
-      film: state.filmDetailedReducer.film
+    page: state.paginationReducer.page,
+    film: state.filmDetailedReducer.film,
+    // searchWord: state.searchFilmReducer.searchWord,
+    searchedFilmData: state.searchFilmReducer.searchedFilmData
+
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-  updateCurrentPage: page => {
+    updateCurrentPage: page => {
       dispatch({ type: "UPDATE_PAGE", payload: page });
-  },
-  updateFilmDetailed: film => {
-    dispatch({ type: "UPDATE_FILM_DETAILED", payload: film });
-}
+    },
+    updateFilmDetailed: film => {
+      dispatch({ type: "UPDATE_FILM_DETAILED", payload: film });
+    }
   };
 };
-export default withRouter(connect(mapStateToProps,mapDispatchToProps)(Films));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Films));

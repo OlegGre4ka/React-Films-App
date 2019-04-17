@@ -14,11 +14,20 @@ import {
 import { withRouter } from "react-router-dom";
 
 class App extends Component {
+  constructor(props){
+    super(props)
+    this.state={
+      setPagination:false
+    }
+  }
   componentDidMount() {
     // console.log(this.props, "App-props"); 
     this.props.history.replace('/films');
   }
-  
+  messageActors= value =>{
+    console.log(value,'value-message')
+this.setState({setPagination:value})
+  }
   render() {
     return (
       <div className="App">
@@ -36,13 +45,12 @@ class App extends Component {
               path="/actors/:id"
               component={ActorDetailed}
             />
-            <Route path="/actors" render={() => <Actors />} />
+            <Route path="/actors" render={() => <Actors messageActors={this.messageActors}/>} />
         
           </Switch>
           <div className="d-flex justify-content-center">
         { (this.props.location.pathname==='/films' || this.props.location.pathname==='/actors')&& <PagePagination/>}
-        {/* { this.props.location.pathname==='/actors'&& <PagePagination/>} */}
-
+        {/* {this.state.setPagination && <PagePagination/>} */}
           </div>
         </main>
         <footer className="App-footer">

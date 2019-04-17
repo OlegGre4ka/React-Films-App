@@ -12,42 +12,48 @@ import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 import { connect } from "react-redux";
 
 class FilmDetailed extends Component {
-  
+
   render() {
     // console.log(this.props,'props-film-1')
     return (
       <div className="Films container-fluid">
-      <div className="row">
-         <Pagination aria-label="Page navigation example" style={{marginLeft:'25px',marginTop:'10px'}}>
+        <div className="row">
+          <Pagination aria-label="Page navigation example" style={{ marginLeft: '25px', marginTop: '10px' }}>
             <PaginationItem >
-                <PaginationLink  previous onClick={()=>this.props.history.push('/films')}>
-             Back 
+              <PaginationLink previous onClick={() => this.props.history.push('/films')}>
+                Back
              </PaginationLink>
-            </PaginationItem>         
-        </Pagination>
+            </PaginationItem>
+          </Pagination>
         </div>
         <div className="row">
-        <div className="col-md-2"></div>
-        {this.props.film.map((item, i) => (
-          <div key={i} className="col-md-8" style={{marginTop:'10px'}}>
-          <Card key={i} style={{minHeight:'100%',display:'flex',flexDirection:'flex-start'}}>
-          <div style={{display:'flex',flexDirection:'flex-start'}}>
-            <CardImg  width="100%" src={`https://image.tmdb.org/t/p/w300${item.poster_path}`} alt={item.title} />
-            <CardBody>
-              <CardTitle
-               style={{color:'darkblue',fontSize:'20px',fontWeight:'bold',cursor:'pointer'}}
-              >{item.title}</CardTitle>
+          <div className="col-md-2"></div>
+          {this.props.film.map((item, i) => (
+            <div key={i} className="col-md-8" style={{ marginTop: '10px' }}>
+              <Card key={i} >
+                <div className="row">
 
-              <CardSubtitle className="d-flex justify-content-between">
-              </CardSubtitle>
+                  <div className="col-md-8">
+                    <CardImg width="100%" src={`https://image.tmdb.org/t/p/w400${item.poster_path}`} alt={item.title} />
+                  </div>
+                  <div className="col-md-4">
+                    <CardBody>
+                      <CardTitle
+                        style={{ color: 'darkblue', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer' }}
+                      >{item.title}</CardTitle>
 
-              <CardText>{item.overview}</CardText>
-            </CardBody>
-            </div>
-          </Card>
-          </div>))
-        }
-        <div className="col-md-2"></div>
+                      <CardSubtitle className="d-flex justify-content-between">
+                      </CardSubtitle>
+
+                      <CardText>{item.overview}</CardText>
+                    </CardBody>
+                  </div>
+                </div>
+              </Card>
+
+            </div>))
+          }
+          <div className="col-md-2"></div>
 
         </div>
 
@@ -58,17 +64,17 @@ class FilmDetailed extends Component {
 }
 
 const mapStateToProps = state => {
-    return {
-        film: state.filmDetailedReducer.film
-    };
+  return {
+    film: state.filmDetailedReducer.film
   };
-  
-  const mapDispatchToProps = dispatch => {
-    return {
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
 
     updateFilmDetailed: film => {
       dispatch({ type: "UPDATE_FILM_DETAILED", payload: film });
-  }
-    };
+    }
   };
-export default connect(mapStateToProps,mapDispatchToProps)(FilmDetailed);
+};
+export default connect(mapStateToProps, mapDispatchToProps)(FilmDetailed);

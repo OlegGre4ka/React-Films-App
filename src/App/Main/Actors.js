@@ -8,7 +8,9 @@ import {
   CardTitle,
   CardSubtitle,
 } from 'reactstrap';
-// import { FaStar } from 'react-icons/fa';
+import { Spinner } from 'reactstrap';
+
+import { FaStar } from 'react-icons/fa';
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
@@ -19,19 +21,40 @@ class Actors extends Component {
     super(props);
     this.state = {
       actors: [],
-      genres: []
+      genres: [],
+      message: false,
+      spinner: true
     };
+    // this.props.messageActors(this.state.message)
+
   }
 
   componentDidMount() {
-    this.gettingListActors()
+    this.props.updateCurrentPage(1);
+    this.gettingListActors();
   }
 
   componentDidUpdate(prevProps, prevState) {
 
     if (prevProps.page !== this.props.page) {
       this.gettingListActors()
-    }
+    } else
+      if (prevProps.searchedActors !== this.props.searchedActors) {
+        this.setState({
+          actors: this.props.searchedActors
+        });
+        if (this.props.searchedActors.length === 0) {
+          this.setState({ message: true });
+          this.props.messageActors(this.state.message)
+          setTimeout(
+            () => {
+              this.setState({ message: false });
+              this.props.messageActors(this.state.message)
+              this.gettingListActors();
+            }, 2500
+          )
+        }
+      }
   }
 
   async gettingListActors() {
@@ -40,8 +63,12 @@ class Actors extends Component {
     );
     const data = await response.json();
     this.setState({
-      actors: data.results
+      actors: data.results,
+      spinner: false,
+    
     });
+    this.props.messageActors(true)
+
   }
 
   moveOnActorDetailed = (id) => {
@@ -54,15 +81,30 @@ class Actors extends Component {
     return (
       <div className="Films container-fluid">
         <div className="row">
+          <div className="col-md-4"></div>
+          <div className="col-md-4 d-flex justify-content-center">
+            {this.state.spinner && <Spinner color="success" style={{ width: '5rem', height: '5rem' }} />}
+            {this.state.message && <p
+              // className="col-md-4"
+              style={{ color: 'red', textAlign: 'center', fontSize: '16px', fontWeight: 'bold' }}>Results by your search - not found</p>}
+          </div>
+          <div className="col-md-4"></div>
+
+        </div>
+        <div className="row">
           {this.state.actors.map((actor, i) => (
             <div key={i} className="col-md-3" style={{ padding: '5px' }}>
               <Card key={i} style={{ minHeight: '100%' }} >
-                <CardImg top width="100%" src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`} alt={actor.name} />
+                <CardImg top width="100%"
+                  onClick={() => this.moveOnActorDetailed(actor.id)}
+                  style={{ cursor: 'pointer' }}
+                  src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`} alt={actor.name} />
                 <CardBody>
                   <CardTitle
                     onClick={() => this.moveOnActorDetailed(actor.id)}
                     style={{ color: 'darkblue', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer' }}>{actor.name}</CardTitle>
                   <CardSubtitle className="d-flex justify-content-between">
+                    <span><FaStar style={{ color: 'gold' }} />{actor.popularity}</span>
                   </CardSubtitle>
                 </CardBody>
               </Card>
@@ -79,7 +121,8 @@ class Actors extends Component {
 const mapStateToProps = state => {
   return {
     page: state.paginationReducer.page,
-    actor: state.actorDetailedReducer.actor
+    actor: state.actorDetailedReducer.actor,
+    searchedActors: state.searchActorReducer.searchedActors
   };
 };
 

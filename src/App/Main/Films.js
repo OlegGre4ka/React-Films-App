@@ -30,37 +30,51 @@ class Films extends Component {
 
     this.props.updateCurrentPage(1);
     this.gettingListFilms();
-
-    fetch(
-      `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-U`
-    ).then(response => response.json())
-      .then(genres => {
-        this.setState({
-          genres: genres.genres
-        });
-      });
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.page !== this.props.page) {
       this.gettingListFilms();
     }
-    else
-      if (prevProps.searchedFilmData !== this.props.searchedFilmData) {
-        this.setState({
-          films: this.props.searchedFilmData
-        });
-        if (this.props.searchedFilmData.length === 0) {
-          this.props.settingPagination(false);
-          this.setState({ message: true });
-          setTimeout(
-            () => {
-              this.setState({ message: false, spinner: true });
-              this.gettingListFilms();
-            }, 1500
-          )
-        }
+
+    if (prevProps.searchedFilmData !== this.props.searchedFilmData) {
+      this.setState({
+        films: this.props.searchedFilmData
+      });
+      if (this.props.searchedFilmData.length === 0) {
+        this.props.settingPagination(false);
+        this.setState({ message: true });
+        setTimeout(
+          () => {
+            this.setState({ message: false, films:this.props.films });
+
+            // this.setState({ message: false, spinner: true });
+            // this.gettingListFilms();
+          }, 1500
+        )
       }
+    }
+
+    if ( prevProps.genreID !== this.props.genreID||(prevProps.page !== this.props.page&&prevProps.genreID !== this.props.genreID)) {
+      const newGenresSelected = this.props.films.filter(
+        film => film.genre_ids.some(id => id === this.props.genreID)
+      )
+      this.setState({ films: newGenresSelected })
+      this.props.updateFilmDetailed(this.props.film, this.props.films);
+
+      if (newGenresSelected.length === 0) {
+        this.props.settingPagination(false);
+        this.setState({ message: true });
+        setTimeout(
+          () => {
+            this.setState({ message: false, films:this.props.films });
+            // this.gettingListFilms();
+        this.props.updateGenreID(this.props.genreID, 'Genres')
+
+          }, 1500
+        )
+      }
+    }
 
   }
 
@@ -73,12 +87,14 @@ class Films extends Component {
       films: data.results,
       spinner: false
     });
+    this.props.updateFilmDetailed(this.props.film, data.results);
+
     this.props.settingPagination(true);
   }
 
   moveOnFilmDetailed = (id) => {
     const Film = this.state.films.filter(item => item.id === id);
-    this.props.updateFilmDetailed(Film)
+    this.props.updateFilmDetailed(Film,this.props.films);
     this.props.history.push(`/films/` + id);
   }
   render() {
@@ -112,7 +128,7 @@ class Films extends Component {
                   <CardSubtitle className="d-flex justify-content-between">
                     <span>{film.release_date.slice(0, 4)}</span>
                     <span><FaStar style={{ color: 'gold' }} />{film.popularity}</span></CardSubtitle>
-                  {this.state.genres.map((genre, i) => (film.genre_ids.some(id => genre.id === id) && <span key={i} style={{ fontSize: '14px', marginRight: '3px' }}>{(genre.name + ' ')}</span>))}
+                  {this.props.genres.map((genre, i) => (film.genre_ids.some(id => genre.id === id) && <span key={i} style={{ fontSize: '14px', marginRight: '3px' }}>{(genre.name + ' ')}</span>))}
                 </CardBody>
               </Card>
             </div>))
@@ -129,7 +145,12 @@ const mapStateToProps = state => {
   return {
     page: state.paginationReducer.page,
     film: state.filmDetailedReducer.film,
-    searchedFilmData: state.searchFilmReducer.searchedFilmData
+    films: state.filmDetailedReducer.films,
+
+    searchedFilmData: state.searchFilmReducer.searchedFilmData,
+    genres: state.genresReducer.genres,
+    genreID: state.selectIDGenreReducer.genreID
+
   };
 };
 
@@ -138,9 +159,12 @@ const mapDispatchToProps = dispatch => {
     updateCurrentPage: page => {
       dispatch({ type: "UPDATE_PAGE", payload: page });
     },
-    updateFilmDetailed: film => {
-      dispatch({ type: "UPDATE_FILM_DETAILED", payload: film });
-    }
+    updateFilmDetailed: (film,films) => {
+      dispatch({ type: "UPDATE_FILM_DETAILED", payload: film , payloadFilms:films});
+    },
+    updateGenreID: (genreID, genreName) => {
+      dispatch({ type: "UPDATE_ID_GENRE", payload: genreID, payloadName: genreName });
+  }
   };
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Films));

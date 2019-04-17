@@ -10,6 +10,7 @@ import {
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 const ActorDetailed = props => {
     // console.log(this.props,'props-film-1')
@@ -18,7 +19,7 @@ const ActorDetailed = props => {
         <div className="row">
           <Pagination aria-label="Page navigation example" style={{ marginLeft: '25px', marginTop: '10px' }}>
             <PaginationItem >
-              <PaginationLink previous onClick={() => this.props.history.push('/actors')}>
+              <PaginationLink previous onClick={()=>props.history.push('/actors')}>
                 Back
              </PaginationLink>
             </PaginationItem>
@@ -75,4 +76,4 @@ const mapDispatchToProps = dispatch => {
     }
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(ActorDetailed);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ActorDetailed))

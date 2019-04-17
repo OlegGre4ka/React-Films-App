@@ -17,7 +17,7 @@ const  FilmDetailed = props=> {
         <div className="row">
           <Pagination aria-label="Page navigation example" style={{ marginLeft: '25px', marginTop: '10px' }}>
             <PaginationItem >
-              <PaginationLink previous onClick={() => this.props.history.push('/films')}>
+              <PaginationLink previous onClick={() => props.history.push('/films')}>
                 Back
              </PaginationLink>
             </PaginationItem>

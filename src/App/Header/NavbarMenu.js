@@ -12,8 +12,12 @@ import {
 import {
   NavLink as RRNavLink,
 } from "react-router-dom";
-import SearchComponent from './SearchComponent'
- class NavbarMenu extends Component {
+import SearchComponent from './SearchComponent';
+import GenresDropdown from './GenresDropdown';
+import { withRouter } from "react-router-dom";
+
+
+class NavbarMenu extends Component {
   constructor(props) {
     super(props);
 
@@ -29,30 +33,34 @@ import SearchComponent from './SearchComponent'
   }
   render() {
     return (
-        <div className="NavbarMenu">
+      <div className="NavbarMenu">
         <Navbar color="" light expand="md">
           <NavbarBrand
-          style={{color:"lightgreen"}}
-          to="/">React Films</NavbarBrand>
-               <NavbarBrand>
-      <SearchComponent/>
-               </NavbarBrand>
+            style={{ color: "lightgreen" }}
+            to="/">React Films</NavbarBrand>
+          <NavbarBrand>
+            <SearchComponent />
+          </NavbarBrand>
+      {this.props.location.pathname==='/films'&&<NavbarBrand>
+            <GenresDropdown />
+          </NavbarBrand>}
+
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
                 <NavLink
-                tag={RRNavLink}
-                style={{color:"green"}}
-                activeStyle={{ color: "white" }}
-                to="/films">Films</NavLink>
+                  tag={RRNavLink}
+                  style={{ color: "green" }}
+                  activeStyle={{ color: "white" }}
+                  to="/films">Films</NavLink>
               </NavItem>
               <NavItem>
                 <NavLink
-                tag={RRNavLink}
-                style={{color:"green"}}
-                activeStyle={{ color: "white" }}
-                to="/actors">Actors</NavLink>
+                  tag={RRNavLink}
+                  style={{ color: "green" }}
+                  activeStyle={{ color: "white" }}
+                  to="/actors">Actors</NavLink>
               </NavItem>
             </Nav>
           </Collapse>
@@ -63,4 +71,4 @@ import SearchComponent from './SearchComponent'
 }
 
 
-export default NavbarMenu;
+export default withRouter(NavbarMenu)

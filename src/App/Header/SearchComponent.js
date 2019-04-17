@@ -54,29 +54,33 @@ class SearchComponent extends Component {
         <div className="Search">
   
               <InputGroupAddon addonType="append" size="normal">
-          {this.props.location.pathname==='/films'&&<Input
+          {this.props.location.pathname==='/films'&&(<><Input
                   type="text"
                   placeholder="Search..."
                   value={this.props.searchWord}
                   onChange={this.onSearchInputChange}
                   onKeyPress={this.onSearchInputChange}
-                //   ref={Input => {
-                //     this.input = Input;
-                //   }}
-                />}
-              { this.props.location.pathname==='/actors' && <Input
-                  type="text"
-                  placeholder="Search..."
-                  value={this.props.searchActorWord}
-                  onChange={this.onSearchInputChange}
-                  onKeyPress={this.onSearchInputChange}
-                />}
+                />
                 <InputGroupText
                 // style={{cursor:'pointer'}}
                 //   onClick={this.onSearchInputChange}
                 >
                   <FaSistrix />
-                </InputGroupText>
+          </InputGroupText></>)}
+              { this.props.location.pathname==='/actors' &&(<> <Input
+                  type="text"
+                  placeholder="Search..."
+                  value={this.props.searchActorWord}
+                  onChange={this.onSearchInputChange}
+                  onKeyPress={this.onSearchInputChange}
+                />
+                <InputGroupText
+                // style={{cursor:'pointer'}}
+                //   onClick={this.onSearchInputChange}
+                >
+                  <FaSistrix />
+              </InputGroupText></>)}
+             
               </InputGroupAddon>
          
       </div>

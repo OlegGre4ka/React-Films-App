@@ -19,11 +19,23 @@
     .App-main{
       background-color: whitesmoke;
       flex: 1 0 auto;
+      .BackToTop{
+        color:darkblue;
+        font-size: 16px;
+        cursor:pointer;
+        padding:10px;
+      ;
+      }
     }
+    footer{
     .App-footer{
+      display:flex;
+      justify-content: space-around;
+      align-items:center;
       color: white;
       background-color: #05276b;
-
+      padding:10px;
+    }
     }
   }
 }

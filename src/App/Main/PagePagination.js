@@ -7,17 +7,29 @@ const PagePagination = props => {
 
     const selectPrevPage = () => {
         if (props.page >= 2) {
-            props.updateCurrentPage(props.page - 1)
+            props.updateCurrentPage(props.page - 1);
+            setTimeout(
+                () => window.scrollTo(0, 0), 400
+            )
         } else {
-            props.updateCurrentPage(1)
+            props.updateCurrentPage(1);
+            setTimeout(
+                () => window.scrollTo(0, 0), 400
+            )
         }
     }
     const selectNextPage = () => {
 
         if (props.page <= 5) {
-            props.updateCurrentPage(6)
+            props.updateCurrentPage(6);
+            setTimeout(
+                () => window.scrollTo(0, 0), 400
+            )
         } else {
-            props.updateCurrentPage(props.page + 1)
+            props.updateCurrentPage(props.page + 1);
+            setTimeout(
+                () => window.scrollTo(0, 0), 400
+            )
         }
     }
     return (
@@ -30,27 +42,47 @@ const PagePagination = props => {
                 <PaginationLink previous onClick={selectPrevPage}/>
             </PaginationItem> */}
                 <PaginationItem>
-                    <PaginationLink onClick={() => props.updateCurrentPage(1)}>
+                    <PaginationLink onClick={() => {
+                        props.updateCurrentPage(1); setTimeout(
+                            () => window.scrollTo(0, 0), 400
+                        )
+                    }}>
                         1
           </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
-                    <PaginationLink onClick={() => props.updateCurrentPage(2)}>
+                    <PaginationLink onClick={() => {
+                        props.updateCurrentPage(2); setTimeout(
+                            () => window.scrollTo(0, 0), 400
+                        )
+                    }}>
                         2
           </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
-                    <PaginationLink onClick={() => props.updateCurrentPage(3)}>
+                    <PaginationLink onClick={() => {
+                        props.updateCurrentPage(3); setTimeout(
+                            () => window.scrollTo(0, 0), 400
+                        )
+                    }}>
                         3
           </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
-                    <PaginationLink onClick={() => props.updateCurrentPage(4)}>
+                    <PaginationLink onClick={() => {
+                        props.updateCurrentPage(4); setTimeout(
+                            () => window.scrollTo(0, 0), 400
+                        )
+                    }}>
                         4
           </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
-                    <PaginationLink onClick={() => props.updateCurrentPage(5)}>
+                    <PaginationLink onClick={() => {
+                        props.updateCurrentPage(5); setTimeout(
+                            () => window.scrollTo(0, 0), 400
+                        )
+                    }}>
                         5
           </PaginationLink>
                 </PaginationItem>
@@ -60,7 +92,7 @@ const PagePagination = props => {
                 <PaginationItem>
                     <PaginationLink next onClick={selectNextPage} />
                 </PaginationItem>
-           {props.page>5&&<PaginationItem>
+                {props.page > 5 && <PaginationItem>
                     <PaginationLink>
                         {props.page}
                     </PaginationLink>
